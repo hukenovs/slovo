@@ -31,11 +31,18 @@ where:
 For convenience, we have also prepared a compressed version of the dataset, in which all videos are processed by the minimum side `min_side = 360`. Download link - **[slovo360p](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo360.zip)**.
 
 ## Models
-We provide some pre-trained models as the baseline for russian sign language recognition.
+We provide some pre-trained models as the baseline for Russian sign language recognition. 
+We tested models with frames number from [16, 32, 48], and **the best for each are below**.
+The first number in the model name is frames number and the second is frame interval. 
 
-| Model Name                                 | Parameters (M) | Metric    |
-|--------------------------------------------|----------------|-----------|
-| [model](link)                              | X              |  X        |
+| Model Name        | Model Size (MB) | Metric | ONNX                                                                                                            | TorchScript                                                                                                 |
+|-------------------|-----------------|--------|-----------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| MViTv2-small-16-4 | 140.51          | 58.35  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/mvit/onnx/mvit16-4.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/mvit/pt/mvit16-4.pt) |
+| MViTv2-small-32-2 | 140.79          | 64.09  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/mvit/onnx/mvit32-2.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/mvit/pt/mvit32-2.pt) |
+| MViTv2-small-48-2 | 141.05          | 62.18  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/mvit/onnx/mvit48-2.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/mvit/pt/mvit48-2.pt) |
+| Swin-large-16-3   | 821.65          | 48.04  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/onnx/swin16-3.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/pt/swin16-3.pt) |
+| Swin-large-32-2   | 821.74          | 54.84  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/onnx/swin32-2.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/pt/swin32-2.pt) |
+| Swin-large-48-1   | 821.78          | 55.66  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/onnx/swin48-1.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/pt/swin48-1.pt) |
 
 ## Demo
 ```console

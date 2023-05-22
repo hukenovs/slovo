@@ -1,0 +1,4 @@
+omegaconf==2.3.0
+onnxruntime==1.14.1
+opencv-contrib-python==4.7.0.72
+torch>=1.8

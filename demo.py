@@ -1,24 +1,26 @@
 import argparse
-import logging
+import sys
 import time
 from collections import deque
 from multiprocessing import Manager, Process, Value
 from typing import Optional, Tuple
 
 import onnxruntime as ort
+from loguru import logger
 
 ort.set_default_logger_severity(4)
+logger.add(sys.stdout, format="{level} | {message}")
+logger.remove(0)
 import cv2
 import numpy as np
 from omegaconf import OmegaConf
 
 from constants import classes
 
-logger = logging.getLogger(__name__)
-
 
 class BaseRecognition:
-    def __init__(self, model_path: str, tensors_list, prediction_list):
+    def __init__(self, model_path: str, tensors_list, prediction_list, verbose):
+        self.verbose = verbose
         self.started = None
         self.output_names = None
         self.input_shape = None
@@ -51,16 +53,18 @@ class BaseRecognition:
             input_tensor = np.stack(self.tensors_list[: self.window_size], axis=1)[None][None]
             st = time.time()
             outputs = self.session.run(self.output_names, {self.input_name: input_tensor.astype(np.float32)})[0]
+            et = round(time.time() - st, 3)
             gloss = str(classes[outputs.argmax()])
-            logger.info(f"- Prediction time {round(time.time() - st, 3)}, new gloss: {gloss}")
             if gloss != self.prediction_list[-1] and len(self.prediction_list):
                 self.prediction_list.append(gloss)
             self.clear_tensors()
-            logging.info(f" --- {len(self.tensors_list)} frames in queue")
+            if self.verbose:
+                logger.info(f"- Prediction time {et}, new gloss: {gloss}")
+                logger.info(f" --- {len(self.tensors_list)} frames in queue")
 
 
 class Recognition(BaseRecognition):
-    def __init__(self, model_path: str, tensors_list: list, prediction_list: list):
+    def __init__(self, model_path: str, tensors_list: list, prediction_list: list, verbose: bool):
         """
         Initialize recognition model.
 
@@ -77,7 +81,9 @@ class Recognition(BaseRecognition):
         -----
         The recognition model is run in a separate process.
         """
-        super().__init__(model_path=model_path, tensors_list=tensors_list, prediction_list=prediction_list)
+        super().__init__(
+            model_path=model_path, tensors_list=tensors_list, prediction_list=prediction_list, verbose=verbose
+        )
         self.started = True
 
     def start(self):
@@ -85,7 +91,7 @@ class Recognition(BaseRecognition):
 
 
 class RecognitionMP(Process, BaseRecognition):
-    def __init__(self, model_path: str, tensors_list, prediction_list):
+    def __init__(self, model_path: str, tensors_list, prediction_list, verbose):
         """
         Initialize recognition model.
 
@@ -104,17 +110,18 @@ class RecognitionMP(Process, BaseRecognition):
         """
         super().__init__()
         BaseRecognition.__init__(
-            self, model_path=model_path, tensors_list=tensors_list, prediction_list=prediction_list
+            self, model_path=model_path, tensors_list=tensors_list, prediction_list=prediction_list, verbose=verbose
         )
         self.started = Value("i", False)
 
     def run(self):
         while True:
             BaseRecognition.run(self)
+            self.started = True
 
 
 class Runner:
-    def __init__(self, model_path: str, config: OmegaConf = None, mp: bool = False) -> None:
+    def __init__(self, model_path: str, config: OmegaConf = None, mp: bool = False, verbose: bool = False) -> None:
         """
         Initialize runner.
 
@@ -142,9 +149,9 @@ class Runner:
         self.mean = config.mean
         self.std = config.std
         if self.multiprocess:
-            self.recognizer = RecognitionMP(model_path, self.tensors_list, self.prediction_list)
+            self.recognizer = RecognitionMP(model_path, self.tensors_list, self.prediction_list, verbose)
         else:
-            self.recognizer = Recognition(model_path, self.tensors_list, self.prediction_list)
+            self.recognizer = Recognition(model_path, self.tensors_list, self.prediction_list, verbose)
 
     def add_frame(self, image):
         """
@@ -232,8 +239,10 @@ class Runner:
 
                 frame = np.concatenate((frame, text_div), axis=0)
                 cv2.imshow("frame", frame)
-                if cv2.waitKey(1) & 0xFF == ord("q"):
-                    self.recognizer.kill()
+                condition = cv2.waitKey(10) & 0xFF
+                if condition in {ord("q"), ord("Q"), 27}:
+                    if self.multiprocess:
+                        self.recognizer.kill()
                     break
 
 
@@ -242,7 +251,7 @@ def parse_arguments(params: Optional[Tuple] = None) -> argparse.Namespace:
 
     parser.add_argument("-p", "--config", required=True, type=str, help="Path to config")
     parser.add_argument("--mp", required=False, action="store_true", help="Enable multiprocessing")
-    parser.add_argument("--log", required=False, action="store_true", help="Enable logging")
+    parser.add_argument("-v", "--verbose", required=False, action="store_true", help="Enable logging")
 
     known_args, _ = parser.parse_known_args(params)
     return known_args
@@ -250,8 +259,6 @@ def parse_arguments(params: Optional[Tuple] = None) -> argparse.Namespace:
 
 if __name__ == "__main__":
     args = parse_arguments()
-    if args.log:
-        logging.getLogger().setLevel(logging.INFO)
     conf = OmegaConf.load(args.config)
-    runner = Runner(conf.model_path, conf, args.mp)
+    runner = Runner(conf.model_path, conf, args.mp, args.verbose)
     runner.run()

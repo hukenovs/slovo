@@ -1,13 +1,16 @@
 import argparse
-import logging
+import sys
 import time
 from collections import deque
 from multiprocessing import Manager, Process, Value
 from typing import Optional, Tuple
 
 import onnxruntime as ort
+from loguru import logger
 
 ort.set_default_logger_severity(4)
+logger.add(sys.stdout, format="{level} | {message}")
+logger.remove(0)
 import cv2
 import numpy as np
 from omegaconf import OmegaConf
@@ -15,8 +18,80 @@ from omegaconf import OmegaConf
 from constants import classes
 
 
-class Recognition(Process):
-    def __init__(self, model_path: str, tensors_list, prediction_list):
+class BaseRecognition:
+    def __init__(self, model_path: str, tensors_list, prediction_list, verbose):
+        self.verbose = verbose
+        self.started = None
+        self.output_names = None
+        self.input_shape = None
+        self.input_name = None
+        self.session = None
+        self.model_path = model_path
+        self.window_size = None
+        self.tensors_list = tensors_list
+        self.prediction_list = prediction_list
+
+    def clear_tensors(self):
+        """
+        Clear the list of tensors.
+        """
+        for _ in range(self.window_size):
+            self.tensors_list.pop(0)
+
+    def run(self):
+        """
+        Run the recognition model.
+        """
+        if self.session is None:
+            self.session = ort.InferenceSession(self.model_path)
+            self.input_name = self.session.get_inputs()[0].name
+            self.input_shape = self.session.get_inputs()[0].shape
+            self.window_size = self.input_shape[3]
+            self.output_names = [output.name for output in self.session.get_outputs()]
+
+        if len(self.tensors_list) >= self.input_shape[3]:
+            input_tensor = np.stack(self.tensors_list[: self.window_size], axis=1)[None][None]
+            st = time.time()
+            outputs = self.session.run(self.output_names, {self.input_name: input_tensor.astype(np.float32)})[0]
+            et = round(time.time() - st, 3)
+            gloss = str(classes[outputs.argmax()])
+            if gloss != self.prediction_list[-1] and len(self.prediction_list):
+                self.prediction_list.append(gloss)
+            self.clear_tensors()
+            if self.verbose:
+                logger.info(f"- Prediction time {et}, new gloss: {gloss}")
+                logger.info(f" --- {len(self.tensors_list)} frames in queue")
+
+
+class Recognition(BaseRecognition):
+    def __init__(self, model_path: str, tensors_list: list, prediction_list: list, verbose: bool):
+        """
+        Initialize recognition model.
+
+        Parameters
+        ----------
+        model_path : str
+            Path to the model.
+        tensors_list : List
+            List of tensors to be used for prediction.
+        prediction_list : List
+            List of predictions.
+
+        Notes
+        -----
+        The recognition model is run in a separate process.
+        """
+        super().__init__(
+            model_path=model_path, tensors_list=tensors_list, prediction_list=prediction_list, verbose=verbose
+        )
+        self.started = True
+
+    def start(self):
+        self.run()
+
+
+class RecognitionMP(Process, BaseRecognition):
+    def __init__(self, model_path: str, tensors_list, prediction_list, verbose):
         """
         Initialize recognition model.
 
@@ -34,44 +109,19 @@ class Recognition(Process):
         The recognition model is run in a separate process.
         """
         super().__init__()
+        BaseRecognition.__init__(
+            self, model_path=model_path, tensors_list=tensors_list, prediction_list=prediction_list, verbose=verbose
+        )
         self.started = Value("i", False)
-        self.model_path = model_path
-        self.window_size = None
-        self.tensors_list = tensors_list
-        self.prediction_list = prediction_list
-
-    def clear(self):
-        """
-        Clear the list of tensors.
-        """
-        for _ in range(self.window_size):
-            self.tensors_list.pop(0)
 
     def run(self):
-        """
-        Run the recognition model.
-        """
-        self.session = ort.InferenceSession(self.model_path)
-        self.input_name = self.session.get_inputs()[0].name
-        self.input_shape = self.session.get_inputs()[0].shape
-        self.window_size = self.input_shape[3]
-        self.output_names = [output.name for output in self.session.get_outputs()]
         while True:
+            BaseRecognition.run(self)
             self.started = True
-            if len(self.tensors_list) >= self.input_shape[3]:
-                input = np.stack(self.tensors_list[: self.input_shape[3]], axis=1)[None][None]
-                st = time.time()
-                outputs = self.session.run(self.output_names, {self.input_name: input.astype(np.float32)})
-                logging.info(f" --- prediction time {time.time() - st}")
-                clas = str(classes[outputs[0].argmax()])
-                if clas not in self.prediction_list:
-                    self.prediction_list.append(clas)
-                self.clear()
-                logging.info(f" --- {len(self.tensors_list)} frames in queue")
 
 
 class Runner:
-    def __init__(self, model_path: str, config) -> None:
+    def __init__(self, model_path: str, config: OmegaConf = None, mp: bool = False, verbose: bool = False) -> None:
         """
         Initialize runner.
 
@@ -87,16 +137,21 @@ class Runner:
         The runner uses multiprocessing to run the recognition model in a separate process.
 
         """
+        self.multiprocess = mp
         self.cap = cv2.VideoCapture(0)
-        self.manager = Manager()
-        self.tensors_list = self.manager.list()
-        self.prediction_list = self.manager.list()
+        self.manager = Manager() if self.multiprocess else None
+        self.tensors_list = self.manager.list() if self.multiprocess else []
+        self.prediction_list = self.manager.list() if self.multiprocess else []
+        self.prediction_list.append("---")
         self.frame_counter = 0
         self.frame_interval = config.frame_interval
         self.prediction_classes = deque(maxlen=4)
         self.mean = config.mean
         self.std = config.std
-        self.recognizer = Recognition(model_path, self.tensors_list, self.prediction_list)
+        if self.multiprocess:
+            self.recognizer = RecognitionMP(model_path, self.tensors_list, self.prediction_list, verbose)
+        else:
+            self.recognizer = Recognition(model_path, self.tensors_list, self.prediction_list, verbose)
 
     def add_frame(self, image):
         """
@@ -162,20 +217,32 @@ class Runner:
         -----
         The runner will run until the user presses 'q'.
         """
-        self.recognizer.start()
+        if self.multiprocess:
+            self.recognizer.start()
+
         while self.cap.isOpened():
             if self.recognizer.started:
                 _, frame = self.cap.read()
                 text_div = np.zeros((50, frame.shape[1], 3), dtype=np.uint8)
                 self.add_frame(frame)
-                if len(self.prediction_list):
+
+                if not self.multiprocess:
+                    self.recognizer.start()
+
+                if self.prediction_list:
                     self.prediction_classes.extend(self.prediction_list)
-                    text = " ".join(self.prediction_classes)
-                    cv2.putText(text_div, text, (10, 30), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255, 255, 255), 1)
+                    text = "  ".join(self.prediction_classes)
+                    cv2.putText(text_div, text, (10, 30), cv2.FONT_HERSHEY_COMPLEX, 0.7, (255, 255, 255), 2)
+
+                if len(self.prediction_list) > 100:
+                    self.prediction_list.clear()
+
                 frame = np.concatenate((frame, text_div), axis=0)
                 cv2.imshow("frame", frame)
-                if cv2.waitKey(1) & 0xFF == ord("q"):
-                    self.recognizer.kill()
+                condition = cv2.waitKey(10) & 0xFF
+                if condition in {ord("q"), ord("Q"), 27}:
+                    if self.multiprocess:
+                        self.recognizer.kill()
                     break
 
 
@@ -183,14 +250,15 @@ def parse_arguments(params: Optional[Tuple] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Demo full frame classification...")
 
     parser.add_argument("-p", "--config", required=True, type=str, help="Path to config")
+    parser.add_argument("--mp", required=False, action="store_true", help="Enable multiprocessing")
+    parser.add_argument("-v", "--verbose", required=False, action="store_true", help="Enable logging")
 
     known_args, _ = parser.parse_known_args(params)
     return known_args
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
     args = parse_arguments()
     conf = OmegaConf.load(args.config)
-    runner = Runner(conf.model_path, conf)
+    runner = Runner(conf.model_path, conf, args.mp, args.verbose)
     runner.run()

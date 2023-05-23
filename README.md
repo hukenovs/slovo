@@ -5,9 +5,16 @@ We introduce a large-scale video dataset **Slovo** for Russian Sign Language tas
 For more information see our paper - [arXiv]().
 
 ## Downloads
-### [Download Link](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo.zip)
+### [Main download link](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo.zip)
 
-Also, you can download it from [Kaggle](https://www.kaggle.com/datasets/kapitanov/slovo).
+|                                                                                               Downloads | Size (GB) | Comment                                                              |
+|--------------------------------------------------------------------------------------------------------:|:----------|:---------------------------------------------------------------------|
+|                [Slovo](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo.zip) | ~16       | Trimmed HD+ videos by `(start, end)` annotations                     |
+|          [Origin](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo_full.zip) | ~105      | Original HD+ videos from mining stage                                |
+|        [360p](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo_full360.zip)  | ~13       | Resized original videos by `min_side = 360`                          |
+| [Landmarks](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo_mediapipe.json) | ~1.2      | Mediapipe hand landmark annotations for each frame of trimmed videos |
+
+Also, you can download **Slovo** from [Kaggle](https://www.kaggle.com/datasets/kapitanov/slovo).
 
 Annotation file is easy to use and contains some useful columns, see `annotations.csv` file:
 
@@ -28,7 +35,8 @@ where:
 - `begin` - start of the gesture (for original dataset)
 - `end` - end of the gesture (for original dataset)
 
-For convenience, we have also prepared a compressed version of the dataset, in which all videos are processed by the minimum side `min_side = 360`. Download link - **[slovo360p](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo360.zip)**.
+For convenience, we have also prepared a compressed version of the dataset, in which all videos are processed by the minimum side `min_side = 360`. Download link - **[slovo360p](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo_full360.zip)**.
+Also, we annotate trimmed videos by using **MediaPipe** and provide hand keypoints in [this annotation file](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo_mediapipe.json).
 
 ## Models
 We provide some pre-trained models as the baseline for Russian sign language recognition. 
@@ -46,6 +54,18 @@ The first number in the model name is frames number and the second is frame inte
 
 ## Demo
 ```console
+usage: demo.py [-h] -p CONFIG [--mp] [-v] [-l LENGTH]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p CONFIG, --config CONFIG
+                        Path to config
+  --mp                  Enable multiprocessing
+  -v, --verbose         Enable logging
+  -l LENGTH, --length LENGTH
+                        Deque length for predictions
+
+
 python demo.py -p <PATH_TO_CONFIG>
 ```
 

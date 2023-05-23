@@ -51,6 +51,9 @@ The first number in the model name is frames number and the second is frame inte
 | Swin-large-16-3   | 821.65          | 48.04  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/onnx/swin16-3.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/pt/swin16-3.pt) |
 | Swin-large-32-2   | 821.74          | 54.84  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/onnx/swin32-2.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/pt/swin32-2.pt) |
 | Swin-large-48-1   | 821.78          | 55.66  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/onnx/swin48-1.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/pt/swin48-1.pt) |
+| ResNet-i3d-16-3   | 146.43          | 32.86  | [weights](https://sc.link/jRBRY) | [weights](https://sc.link/lY0Y7) |
+| ResNet-i3d-32-2   | 146.43          | 38.38  | [weights](https://sc.link/kRgRr) | [weights](https://sc.link/mZkZE) |
+| ResNet-i3d-48-1   | 146.43          | 43.91  | [weights](https://sc.link/gJyJZ) | [weights](https://sc.link/n5l5Y) |
 
 ## Demo
 ```console

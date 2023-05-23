@@ -88,8 +88,8 @@ You can cite the paper using the following BibTeX entry:
 ## Links
 - [arXiv]()
 - [Kaggle](https://www.kaggle.com/datasets/kapitanov/slovo)
-- [Habr]()
-- [Medium]()
+- [Habr](https://habr.com/ru/companies/sberdevices/articles/737018/)
+- [Github](https://github.com/hukenovs/slovo)
 - [Gitlab](https://gitlab.aicloud.sbercloud.ru/rndcv/slovo)
 - [Paperswithcode]()
 

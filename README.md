@@ -42,6 +42,8 @@ We provide some pre-trained models as the baseline for russian sign language rec
 python demo.py -p <PATH_TO_CONFIG>
 ```
 
+![demo](images/demo.gif)
+
 ## Authors and Credits
 - [Kapitanov Alexander](https://www.linkedin.com/in/hukenovs)
 - [Kvanchiani Karina](https://www.linkedin.com/in/kvanchiani)

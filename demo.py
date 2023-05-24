@@ -1,7 +1,6 @@
 import argparse
 import sys
 import time
-from collections import deque
 from multiprocessing import Manager, Process, Value
 from typing import Optional, Tuple
 
@@ -56,11 +55,15 @@ class BaseRecognition:
             et = round(time.time() - st, 3)
             gloss = str(classes[outputs.argmax()])
             if gloss != self.prediction_list[-1] and len(self.prediction_list):
-                self.prediction_list.append(gloss)
+                if gloss != "---":
+                    self.prediction_list.append(gloss)
             self.clear_tensors()
             if self.verbose:
                 logger.info(f"- Prediction time {et}, new gloss: {gloss}")
                 logger.info(f" --- {len(self.tensors_list)} frames in queue")
+
+    def kill(self):
+        pass
 
 
 class Recognition(BaseRecognition):
@@ -121,7 +124,16 @@ class RecognitionMP(Process, BaseRecognition):
 
 
 class Runner:
-    def __init__(self, model_path: str, config: OmegaConf = None, mp: bool = False, verbose: bool = False) -> None:
+    STACK_SIZE = 6
+
+    def __init__(
+        self,
+        model_path: str,
+        config: OmegaConf = None,
+        mp: bool = False,
+        verbose: bool = False,
+        length: int = STACK_SIZE,
+    ) -> None:
         """
         Initialize runner.
 
@@ -145,7 +157,7 @@ class Runner:
         self.prediction_list.append("---")
         self.frame_counter = 0
         self.frame_interval = config.frame_interval
-        self.prediction_classes = deque(maxlen=4)
+        self.length = length
         self.mean = config.mean
         self.std = config.std
         if self.multiprocess:
@@ -230,12 +242,11 @@ class Runner:
                     self.recognizer.start()
 
                 if self.prediction_list:
-                    self.prediction_classes.extend(self.prediction_list)
-                    text = "  ".join(self.prediction_classes)
+                    text = "  ".join(self.prediction_list)
                     cv2.putText(text_div, text, (10, 30), cv2.FONT_HERSHEY_COMPLEX, 0.7, (255, 255, 255), 2)
 
-                if len(self.prediction_list) > 100:
-                    self.prediction_list.clear()
+                if len(self.prediction_list) > self.length:
+                    self.prediction_list.pop(0)
 
                 frame = np.concatenate((frame, text_div), axis=0)
                 cv2.imshow("frame", frame)
@@ -243,6 +254,8 @@ class Runner:
                 if condition in {ord("q"), ord("Q"), 27}:
                     if self.multiprocess:
                         self.recognizer.kill()
+                    self.cap.release()
+                    cv2.destroyAllWindows()
                     break
 
 
@@ -252,6 +265,7 @@ def parse_arguments(params: Optional[Tuple] = None) -> argparse.Namespace:
     parser.add_argument("-p", "--config", required=True, type=str, help="Path to config")
     parser.add_argument("--mp", required=False, action="store_true", help="Enable multiprocessing")
     parser.add_argument("-v", "--verbose", required=False, action="store_true", help="Enable logging")
+    parser.add_argument("-l", "--length", required=False, type=int, default=4, help="Deque length for predictions")
 
     known_args, _ = parser.parse_known_args(params)
     return known_args
@@ -260,5 +274,5 @@ def parse_arguments(params: Optional[Tuple] = None) -> argparse.Namespace:
 if __name__ == "__main__":
     args = parse_arguments()
     conf = OmegaConf.load(args.config)
-    runner = Runner(conf.model_path, conf, args.mp, args.verbose)
+    runner = Runner(conf.model_path, conf, args.mp, args.verbose, args.length)
     runner.run()

@@ -7,9 +7,9 @@ from typing import Optional, Tuple
 import onnxruntime as ort
 from loguru import logger
 
-ort.set_default_logger_severity(4)
-logger.add(sys.stdout, format="{level} | {message}")
-logger.remove(0)
+ort.set_default_logger_severity(4)  # NOQA
+logger.add(sys.stdout, format="{level} | {message}")  # NOQA
+logger.remove(0)  # NOQA
 import cv2
 import numpy as np
 from omegaconf import OmegaConf
@@ -127,12 +127,12 @@ class Runner:
     STACK_SIZE = 6
 
     def __init__(
-        self,
-        model_path: str,
-        config: OmegaConf = None,
-        mp: bool = False,
-        verbose: bool = False,
-        length: int = STACK_SIZE,
+            self,
+            model_path: str,
+            config: OmegaConf = None,
+            mp: bool = False,
+            verbose: bool = False,
+            length: int = STACK_SIZE,
     ) -> None:
         """
         Initialize runner.
@@ -143,6 +143,8 @@ class Runner:
             Path to the model.
         config : OmegaConf
             Configuration file.
+        length : int
+            Deque length for predictions
 
         Notes
         -----
@@ -157,7 +159,7 @@ class Runner:
         self.prediction_list.append("---")
         self.frame_counter = 0
         self.frame_interval = config.frame_interval
-        self.length = length
+        self.prediction_classes = deque(maxlen=length)
         self.mean = config.mean
         self.std = config.std
         if self.multiprocess:

@@ -2,7 +2,7 @@
 
 We introduce a large-scale video dataset **Slovo** for Russian Sign Language task. Slovo dataset size is about **16 GB**, and it contains **20400** RGB videos for **1000** sign language gestures from 194 singers. Each class has 20 samples. The dataset is divided into training set and test set by subject `user_id`. The training set includes 15300 videos, and the test set includes 5100 videos. The total video recording time is ~9.2 hours. About 35% of the videos are recorded in HD format, and 65% of the videos are in FullHD resolution. The average video length with gesture is 50 frames.
 
-For more information see our paper - [arXiv]().
+For more information see our paper - [arXiv](https://arxiv.org/abs/2305.14527).
 
 ## Downloads
 ### [Main download link](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo.zip)
@@ -91,12 +91,12 @@ You can cite the paper using the following BibTeX entry:
     }
 
 ## Links
-- [arXiv]()
+- [arXiv](https://arxiv.org/abs/2305.14527)
 - [Kaggle](https://www.kaggle.com/datasets/kapitanov/slovo)
 - [Habr](https://habr.com/ru/companies/sberdevices/articles/737018/)
 - [Github](https://github.com/hukenovs/slovo)
 - [Gitlab](https://gitlab.aicloud.sbercloud.ru/rndcv/slovo)
-- [Paperswithcode]()
+- [Paperswithcode](https://paperswithcode.com/paper/slovo-russian-sign-language-dataset)
 
 ## License
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a variant of <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.

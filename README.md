@@ -94,6 +94,7 @@ You can cite the paper using the following BibTeX entry:
 - [arXiv](https://arxiv.org/abs/2305.14527)
 - [Kaggle](https://www.kaggle.com/datasets/kapitanov/slovo)
 - [Habr](https://habr.com/ru/companies/sberdevices/articles/737018/)
+- [Medium](https://medium.com/@nagadit/slovo-russian-sign-language-dataset-a8a8bd6fa17d)
 - [Github](https://github.com/hukenovs/slovo)
 - [Gitlab](https://gitlab.aicloud.sbercloud.ru/rndcv/slovo)
 - [Paperswithcode](https://paperswithcode.com/paper/slovo-russian-sign-language-dataset)

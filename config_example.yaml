@@ -1,4 +1,4 @@
-model_path: mvit16-1.onnx
-frame_interval: 1 # set frame interval
+model_path: mvit32-2.onnx
+frame_interval: 2 # set frame interval
 mean: [123.675, 116.28, 103.53]
 std: [58.395, 57.12, 57.375]

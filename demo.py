@@ -1,6 +1,7 @@
 import argparse
 import sys
 import time
+from collections import deque
 from multiprocessing import Manager, Process, Value
 from typing import Optional, Tuple
 
@@ -159,6 +160,7 @@ class Runner:
         self.prediction_list.append("---")
         self.frame_counter = 0
         self.frame_interval = config.frame_interval
+        self.length = length
         self.prediction_classes = deque(maxlen=length)
         self.mean = config.mean
         self.std = config.std

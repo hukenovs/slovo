@@ -83,11 +83,13 @@ python demo.py -p <PATH_TO_CONFIG>
 ## Citation
 You can cite the paper using the following BibTeX entry:
 
-    @article{Slovo,
-        title={Slovo - Russian Sign Language Dataset and Models},
-        author={Kapitanov, Alexander and Kvanchiani, Karina and Nagaev, Alexander and Petrova, Elizaveta},
-        journal={arXiv preprint <link>},
-        year={2023}
+    @inproceedings{kapitanov2023slovo,
+        title={Slovo: Russian Sign Language Dataset},
+        author={Kapitanov, Alexander and Karina, Kvanchiani and Nagaev, Alexander and Elizaveta, Petrova},
+        booktitle={International Conference on Computer Vision Systems},
+        pages={63--73},
+        year={2023},
+        organization={Springer}
     }
 
 ## Links

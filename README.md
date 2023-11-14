@@ -55,6 +55,14 @@ The first number in the model name is frames number and the second is frame inte
 | ResNet-i3d-32-2   | 146.43          | 38.38  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/resnet/onnx/resnet32-2.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/resnet/pt/resnet32-2.pt) |
 | ResNet-i3d-48-1   | 146.43          | 43.91  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/resnet/onnx/resnet48-1.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/resnet/pt/resnet48-1.pt) |
 
+## SignFlow models
+
+| Model Name | Desc                                                                                                                | ONNX                                                                                                    |
+|------------|---------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| SignFlow-A | **63.3 Top-1** Acc on  [WLASL-2000](https://paperswithcode.com/sota/sign-language-recognition-on-wlasl-2000) (SOTA) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/SignFlow-A.onnx) |
+| SignFlow-R | Pre-trained on ~50000 samples, has 267 classes, tested with GigaChat (as-is and context-based modes)                | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/SignFlow-R.onnx) |
+
+
 ## Demo
 ```console
 usage: demo.py [-h] -p CONFIG [--mp] [-v] [-l LENGTH]

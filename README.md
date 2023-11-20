@@ -57,10 +57,10 @@ The first number in the model name is frames number and the second is frame inte
 
 ## SignFlow models
 
-| Model Name | Desc                                                                                                                | ONNX                                                                                                    |
-|------------|---------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
-| SignFlow-A | **63.3 Top-1** Acc on  [WLASL-2000](https://paperswithcode.com/sota/sign-language-recognition-on-wlasl-2000) (SOTA) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/SignFlow-A.onnx) |
-| SignFlow-R | Pre-trained on ~50000 samples, has 267 classes, tested with GigaChat (as-is and context-based modes)                | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/SignFlow-R.onnx) |
+| Model Name | Desc                                                                                                                | ONNX                                                                                                    | Params |
+|------------|---------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|--------|
+| SignFlow-A | **63.3 Top-1** Acc on  [WLASL-2000](https://paperswithcode.com/sota/sign-language-recognition-on-wlasl-2000) (SOTA) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/SignFlow-A.onnx) | 36M    |
+| SignFlow-R | Pre-trained on **~50000** samples, has **267** classes, tested with GigaChat (as-is and context-based modes)        | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/SignFlow-R.onnx) | 37M    |
 
 
 ## Demo

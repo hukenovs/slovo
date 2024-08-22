@@ -5,14 +5,14 @@ We introduce a large-scale video dataset **Slovo** for Russian Sign Language tas
 For more information see our paper - [arXiv](https://arxiv.org/abs/2305.14527).
 
 ## Downloads
-### [Main download link](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo.zip)
+### [Main download link](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/slovo.zip)
 
 |                                                                                               Downloads | Size (GB) | Comment                                                              |
 |--------------------------------------------------------------------------------------------------------:|:----------|:---------------------------------------------------------------------|
-|                [Slovo](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo.zip) | ~16       | Trimmed HD+ videos by `(start, end)` annotations                     |
-|          [Origin](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo_full.zip) | ~105      | Original HD+ videos from mining stage                                |
-|        [360p](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo_full360.zip)  | ~13       | Resized original videos by `min_side = 360`                          |
-| [Landmarks](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo_mediapipe.json) | ~1.2      | Mediapipe hand landmark annotations for each frame of trimmed videos |
+|                [Slovo](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/slovo.zip) | ~16       | Trimmed HD+ videos by `(start, end)` annotations                     |
+|          [Origin](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/slovo_full.zip) | ~105      | Original HD+ videos from mining stage                                |
+|        [360p](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/slovo_full360.zip)  | ~13       | Resized original videos by `min_side = 360`                          |
+| [Landmarks](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/slovo_mediapipe.json) | ~1.2      | Mediapipe hand landmark annotations for each frame of trimmed videos |
 
 Also, you can download **Slovo** from [Kaggle](https://www.kaggle.com/datasets/kapitanov/slovo).
 
@@ -35,32 +35,32 @@ where:
 - `begin` - start of the gesture (for original dataset)
 - `end` - end of the gesture (for original dataset)
 
-For convenience, we have also prepared a compressed version of the dataset, in which all videos are processed by the minimum side `min_side = 360`. Download link - **[slovo360p](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo_full360.zip)**.
-Also, we annotate trimmed videos by using **MediaPipe** and provide hand keypoints in [this annotation file](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/slovo_mediapipe.json).
+For convenience, we have also prepared a compressed version of the dataset, in which all videos are processed by the minimum side `min_side = 360`. Download link - **[slovo360p](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/slovo_full360.zip)**.
+Also, we annotate trimmed videos by using **MediaPipe** and provide hand keypoints in [this annotation file](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/slovo_mediapipe.json).
 
 ## Models
-We provide some pre-trained models as the baseline for Russian sign language recognition. 
+We provide some pre-trained models as the baseline for Russian sign language recognition.
 We tested models with frames number from [16, 32, 48], and **the best for each are below**.
-The first number in the model name is frames number and the second is frame interval. 
+The first number in the model name is frames number and the second is frame interval.
 
 | Model Name        | Model Size (MB) | Metric | ONNX                                                                                                            | TorchScript                                                                                                 |
 |-------------------|-----------------|--------|-----------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
-| MViTv2-small-16-4 | 140.51          | 58.35  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/mvit/onnx/mvit16-4.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/mvit/pt/mvit16-4.pt) |
-| MViTv2-small-32-2 | 140.79          | 64.09  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/mvit/onnx/mvit32-2.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/mvit/pt/mvit32-2.pt) |
-| MViTv2-small-48-2 | 141.05          | 62.18  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/mvit/onnx/mvit48-2.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/mvit/pt/mvit48-2.pt) |
-| Swin-large-16-3   | 821.65          | 48.04  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/onnx/swin16-3.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/pt/swin16-3.pt) |
-| Swin-large-32-2   | 821.74          | 54.84  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/onnx/swin32-2.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/pt/swin32-2.pt) |
-| Swin-large-48-1   | 821.78          | 55.66  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/onnx/swin48-1.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/swin/pt/swin48-1.pt) |
-| ResNet-i3d-16-3   | 146.43          | 32.86  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/resnet/onnx/resnet16-3.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/resnet/pt/resnet16-3.pt) |
-| ResNet-i3d-32-2   | 146.43          | 38.38  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/resnet/onnx/resnet32-2.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/resnet/pt/resnet32-2.pt) |
-| ResNet-i3d-48-1   | 146.43          | 43.91  | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/resnet/onnx/resnet48-1.onnx) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/resnet/pt/resnet48-1.pt) |
+| MViTv2-small-16-4 | 140.51          | 58.35  | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/mvit/onnx/mvit16-4.onnx) | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/mvit/pt/mvit16-4.pt) |
+| MViTv2-small-32-2 | 140.79          | 64.09  | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/mvit/onnx/mvit32-2.onnx) | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/mvit/pt/mvit32-2.pt) |
+| MViTv2-small-48-2 | 141.05          | 62.18  | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/mvit/onnx/mvit48-2.onnx) | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/mvit/pt/mvit48-2.pt) |
+| Swin-large-16-3   | 821.65          | 48.04  | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/swin/onnx/swin16-3.onnx) | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/swin/pt/swin16-3.pt) |
+| Swin-large-32-2   | 821.74          | 54.84  | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/swin/onnx/swin32-2.onnx) | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/swin/pt/swin32-2.pt) |
+| Swin-large-48-1   | 821.78          | 55.66  | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/swin/onnx/swin48-1.onnx) | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/swin/pt/swin48-1.pt) |
+| ResNet-i3d-16-3   | 146.43          | 32.86  | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/resnet/onnx/resnet16-3.onnx) | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/resnet/pt/resnet16-3.pt) |
+| ResNet-i3d-32-2   | 146.43          | 38.38  | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/resnet/onnx/resnet32-2.onnx) | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/resnet/pt/resnet32-2.pt) |
+| ResNet-i3d-48-1   | 146.43          | 43.91  | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/resnet/onnx/resnet48-1.onnx) | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/resnet/pt/resnet48-1.pt) |
 
 ## SignFlow models
 
 | Model Name | Desc                                                                                                                | ONNX                                                                                                    | Params |
 |------------|---------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|--------|
-| SignFlow-A | **63.3 Top-1** Acc on  [WLASL-2000](https://paperswithcode.com/sota/sign-language-recognition-on-wlasl-2000) (SOTA) | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/SignFlow-A.onnx) | 36M    |
-| SignFlow-R | Pre-trained on **~50000** samples, has **267** classes, tested with GigaChat (as-is and context-based modes)        | [weights](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/slovo/models/SignFlow-R.onnx) | 37M    |
+| SignFlow-A | **63.3 Top-1** Acc on  [WLASL-2000](https://paperswithcode.com/sota/sign-language-recognition-on-wlasl-2000) (SOTA) | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/SignFlow-A.onnx) | 36M    |
+| SignFlow-R | Pre-trained on **~50000** samples, has **267** classes, tested with GigaChat (as-is and context-based modes)        | [weights](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/slovo/models/SignFlow-R.onnx) | 37M    |
 
 
 ## Demo
